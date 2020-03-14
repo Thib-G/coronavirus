@@ -17,6 +17,14 @@
     <div class="map mb-2">
       <MapComponent :confirmed="confirmed" :idx="index" />
     </div>
+    <p class="small">
+      Data:
+      <a href="https://github.com/CSSEGISandData/COVID-19/blob/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv" target="_blank">
+        2019 Novel Coronavirus COVID-19 (2019-nCoV) Data Repository by Johns Hopkins CSSE
+      </a>
+      <br />
+      Source: <a href="https://github.com/Thib-G/coronavirus" target="_blank">Github</a>
+    </p>
   </div>
 </template>
 

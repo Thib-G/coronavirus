@@ -4,6 +4,7 @@ import parse from 'date-fns/parse';
 const TIME_SERIES_CONFIRMED = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv';
 
 export default {
+  TIME_SERIES_CONFIRMED,
   getTimeSeriesConfirmed() {
     return d3.csv(TIME_SERIES_CONFIRMED, (row) => ({
       'Province/State': row['Province/State'],
