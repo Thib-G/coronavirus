@@ -6,7 +6,10 @@
 <script>
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+import Vue from 'vue';
 import { mapBoxKey } from '@/assets/keys';
+
+import MapPopupComponent from '@/components/MapPopupComponent.vue';
 
 // eslint-disable-next-line
 delete L.Icon.Default.prototype._getIconUrl;
@@ -74,6 +77,7 @@ export default {
         opacity: 0.7,
       },
       confirmedFg: L.featureGroup(),
+      popupComponentInstance: null,
     };
   },
   mounted() {
@@ -109,15 +113,35 @@ export default {
           layer.bindTooltip(`${number}`);
           layer.bindPopup(`<h4>${d['Province/State']}
             ${d['Country/Region']}</h4><p>Confirmed: ${number}</p>`);
-          layer.on('mouseover', (e) => {
-            e.target.setStyle(this.circleHoveredStyle);
-          });
-          layer.on('mouseout', (e) => {
-            e.target.setStyle(this.circleDefaultStyle);
+          layer.on({
+            mouseover: (e) => {
+              e.target.setStyle(this.circleHoveredStyle);
+            },
+            mouseout: (e) => {
+              e.target.setStyle(this.circleDefaultStyle);
+            },
+            popupopen: (e) => {
+              this.onPopupOpen(e, d);
+            },
+            popupclose: this.onPopupClose,
           });
           this.confirmedFg.addLayer(layer);
         }
       });
+    },
+    onPopupOpen(e, item) {
+      const { popup } = e;
+      const ComponentConstructor = Vue.extend(MapPopupComponent);
+      this.popupComponentInstance = new ComponentConstructor({
+        propsData: { item },
+        parent: this,
+      }).$mount();
+      popup.setContent(this.popupComponentInstance.$el);
+    },
+    onPopupClose() {
+      if (this.popupComponentInstance) {
+        this.popupComponentInstance.$destroy();
+      }
     },
   },
 };
