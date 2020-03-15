@@ -1,36 +1,53 @@
 <template>
-  <div class="home">
-    <h1>Coronavirus <small>Confirmed cases</small></h1>
+  <b-container class="home d-flex flex-column h-100">
     <b-row>
-      <b-col />
-      <b-col cols="9">
-        <b-form-input type="range" v-model.number="index" :min="min" :max="max" />
-      </b-col>
       <b-col>
-        <b-button v-if="isPlaying" @click="stop">Stop</b-button>
-        <b-button v-else @click="play">Play</b-button>
+        <h1>Coronavirus <small>Confirmed cases, deaths and recovered</small></h1>
+        <b-row>
+          <b-col />
+          <b-col cols="9">
+            <b-form-input type="range" v-model.number="index" :min="min" :max="max" />
+          </b-col>
+          <b-col>
+            <b-button v-if="isPlaying" @click="stop">Stop</b-button>
+            <b-button v-else @click="play">Play</b-button>
+          </b-col>
+        </b-row>
+        <p class="text-center" v-if="dates.length > 0">
+          {{ formatISO(dates[index], { representation: 'date' }) }}
+        </p>
       </b-col>
     </b-row>
-    <p class="text-center" v-if="dates.length > 0">
-      {{ formatISO(dates[index], { representation: 'date' }) }}
-    </p>
-    <div class="map mb-2">
-      <MapComponent
-        :confirmed="confirmed"
-        :deaths="deaths"
-        :recovered="recovered"
-        :idx="index"
-      />
-    </div>
-    <p class="small">
-      Data:
-      <a href="https://github.com/CSSEGISandData/COVID-19/blob/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv" target="_blank">
-        2019 Novel Coronavirus COVID-19 (2019-nCoV) Data Repository by Johns Hopkins CSSE
-      </a>
-      <br />
-      Source: <a href="https://github.com/Thib-G/coronavirus" target="_blank">Github</a>
-    </p>
-  </div>
+    <b-row class="map mb-2 h-100">
+      <b-col cols="9">
+        <MapComponent
+          :confirmed="confirmed"
+          :deaths="deaths"
+          :recovered="recovered"
+          :idx="index"
+        />
+      </b-col>
+      <b-col class="h-100 flex-grow overflow-auto">
+        <b-form-select v-model="selected" :options="options" size="sm" class="mt-1 mb-1" />
+        <DetailComponent
+          :cases="this[selected]"
+          :idx="index"
+        />
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col>
+        <p class="small">
+          Data:
+          <a href="https://github.com/CSSEGISandData/COVID-19/blob/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv" target="_blank">
+            2019 Novel Coronavirus COVID-19 (2019-nCoV) Data Repository by Johns Hopkins CSSE
+          </a>
+          <br />
+          Source: <a href="https://github.com/Thib-G/coronavirus" target="_blank">Github</a>
+        </p>
+      </b-col>
+    </b-row>
+  </b-container>
 </template>
 
 <script>
@@ -38,6 +55,7 @@ import formatISO from 'date-fns/formatISO';
 
 import AppService from '@/services/app-service';
 import MapComponent from '@/components/MapComponent.vue';
+import DetailComponent from '@/components/DetailComponent.vue';
 
 export default {
   name: 'Home',
@@ -51,6 +69,8 @@ export default {
       index: 0,
       isPlaying: false,
       playing: null,
+      options: ['confirmed', 'recovered', 'deaths'],
+      selected: 'confirmed',
     };
   },
   created() {
@@ -111,13 +131,13 @@ export default {
   },
   components: {
     MapComponent,
+    DetailComponent,
   },
 };
 </script>
 
 <style scoped>
   .map {
-    width: 100%;
-    height: 600px;
+    min-height: 400px;
   }
 </style>

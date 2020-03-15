@@ -1,12 +1,8 @@
 <template>
-  <div id="app">
+  <div id="app" class="h-100 d-flex flex-column">
     <NavbarComponent />
-    <b-container>
-      <b-row>
-        <b-col>
-          <router-view />
-        </b-col>
-      </b-row>
+    <b-container fluid class="h-100">
+      <router-view />
     </b-container>
   </div>
 </template>
