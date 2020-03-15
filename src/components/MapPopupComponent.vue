@@ -2,7 +2,8 @@
   <div>
     <h4>{{ item['Country/Region'] }} {{ item['Province/State'] }}</h4>
     <p>
-      <ChartComponent :item="item" />
+      <b-form-checkbox v-model="isLogScale">Log scale</b-form-checkbox>
+      <ChartComponent :item="item" :is-log-scale="isLogScale" />
     </p>
   </div>
 </template>
@@ -16,6 +17,11 @@ export default {
       type: Object,
       required: true,
     },
+  },
+  data() {
+    return {
+      isLogScale: false,
+    };
   },
   components: {
     ChartComponent,

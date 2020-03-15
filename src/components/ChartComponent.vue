@@ -1,7 +1,7 @@
 <template>
   <svg :width="outsideWidth" :height="outsideHeight">
     <g :transform="`translate(${margin.left},${margin.top})`">
-      <path :d="path" class="line" />
+      <g class="line" ref="line" />
       <g
         :transform="`translate(${scale.x(lastPoint.key)},${scale.y(lastPoint.value)})`"
         class="last-point"
@@ -36,6 +36,10 @@ export default {
       type: Object,
       required: true,
     },
+    isLogScale: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -48,14 +52,22 @@ export default {
     };
   },
   mounted() {
-    this.addAxis();
+    this.updateAxis();
+    this.updatePath();
   },
   watch: {
     scale() {
-      this.addAxis();
+      this.updateAxis();
+      this.updatePath();
     },
   },
   computed: {
+    scaleLeft() {
+      return this.isLogScale ? d3.scaleLog : d3.scaleLinear;
+    },
+    series() {
+      return this.item.series.filter((d) => d.value > 0);
+    },
     outsideWidth() {
       return this.width + this.margin.left + this.margin.right;
     },
@@ -63,17 +75,20 @@ export default {
       return this.height + this.margin.top + this.margin.bottom;
     },
     lastPoint() {
-      return this.item.series[this.item.series.length - 1];
+      return this.series[this.series.length - 1];
     },
     scale() {
       const x = d3.scaleLinear()
         .domain([
-          Math.min(...this.item.series.map((d) => d.key)),
-          Math.max(...this.item.series.map((d) => d.key)),
+          Math.min(...this.series.map((d) => d.key)) - (1000 * 60 * 60 * 24),
+          Math.max(...this.series.map((d) => d.key)),
         ])
         .range([0, this.width]);
-      const y = d3.scaleLinear()
-        .domain([0, Math.max(...this.item.series.map((d) => d.value))])
+      const y = this.scaleLeft()
+        .domain([
+          this.scaleLeft === d3.scaleLog ? 1 : 0,
+          Math.max(...this.series.map((d) => d.value)),
+        ])
         .range([this.height, 0]);
       return { x, y };
     },
@@ -82,20 +97,27 @@ export default {
         .x((d) => this.scale.x(d.key))
         .y((d) => this.scale.y(d.value));
     },
-    path() {
-      return this.line(this.item.series);
-    },
   },
   methods: {
-    addAxis() {
+    updatePath() {
+      d3.select(this.$refs.line)
+        .selectAll('path')
+        .data([this.series])
+        .join('path')
+        .transition(500)
+        .attr('d', (d) => this.line(d));
+    },
+    updateAxis() {
       d3.select(this.$refs.axisX).call(
         d3.axisBottom(this.scale.x)
           .tickFormat((d) => dateFormat(d, 'd/M')),
       );
-      d3.select(this.$refs.axisY).call(
-        d3.axisLeft(this.scale.y)
-          .tickFormat((d) => d.toFixed()),
-      );
+      d3.select(this.$refs.axisY)
+        .transition(500)
+        .call(
+          d3.axisLeft(this.scale.y)
+            .ticks(5, '.0f'),
+        );
     },
   },
 };
