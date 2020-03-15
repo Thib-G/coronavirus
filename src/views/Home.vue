@@ -73,8 +73,16 @@ export default {
     },
     play() {
       this.isPlaying = true;
+      if (this.index === this.max) {
+        this.index = 0;
+      }
       this.playing = setInterval(() => {
-        this.index = (this.index + 1) % (this.max + 1);
+        if (this.index < this.max) {
+          this.index += 1;
+        } else {
+          clearInterval(this.playing);
+          this.isPlaying = false;
+        }
       }, 500);
     },
     stop() {
