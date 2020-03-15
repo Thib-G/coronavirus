@@ -15,7 +15,12 @@
       {{ formatISO(dates[index], { representation: 'date' }) }}
     </p>
     <div class="map mb-2">
-      <MapComponent :confirmed="confirmed" :idx="index" />
+      <MapComponent
+        :confirmed="confirmed"
+        :deaths="deaths"
+        :recovered="recovered"
+        :idx="index"
+      />
     </div>
     <p class="small">
       Data:
@@ -41,6 +46,8 @@ export default {
       formatISO,
       appService: AppService,
       confirmed: [],
+      deaths: [],
+      recovered: [],
       index: 0,
       isPlaying: false,
       playing: null,
@@ -50,6 +57,8 @@ export default {
     this.getTimeSeriesConfirmed().then(() => {
       this.index = this.dates.length - 1;
     });
+    this.getTimeSeriesDeaths();
+    this.getTimeSeriesRecovered();
   },
   computed: {
     dates() {
@@ -69,6 +78,16 @@ export default {
     getTimeSeriesConfirmed() {
       return this.appService.getTimeSeriesConfirmed().then((data) => {
         this.confirmed = data;
+      });
+    },
+    getTimeSeriesDeaths() {
+      return this.appService.getTimeSeriesDeaths().then((data) => {
+        this.deaths = data;
+      });
+    },
+    getTimeSeriesRecovered() {
+      return this.appService.getTimeSeriesRecovered().then((data) => {
+        this.recovered = data;
       });
     },
     play() {

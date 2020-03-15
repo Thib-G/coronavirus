@@ -40,6 +40,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    color: {
+      type: String,
+      required: true,
+    },
   },
   data() {
     return {
@@ -105,7 +109,8 @@ export default {
         .data([this.series])
         .join('path')
         .transition(500)
-        .attr('d', (d) => this.line(d));
+        .attr('d', (d) => this.line(d))
+        .attr('stroke', this.color);
     },
     updateAxis() {
       d3.select(this.$refs.axisX).call(
@@ -126,7 +131,6 @@ export default {
 <style scoped>
   .line {
     fill: none;
-    stroke: steelblue;
     stroke-width: 2px;
   }
   .last-point > circle {

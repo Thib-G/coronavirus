@@ -23,9 +23,19 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require('leaflet/dist/images/marker-shadow.png')
 });
 
+const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
+
 export default {
   props: {
     confirmed: {
+      type: Array,
+      required: true,
+    },
+    deaths: {
+      type: Array,
+      required: true,
+    },
+    recovered: {
       type: Array,
       required: true,
     },
@@ -69,27 +79,50 @@ export default {
       map: null,
       circleHoveredStyle: {
         opacity: 1.0,
-        color: 'red',
+        fillOpacity: 0.6,
       },
       circleDefaultStyle: {
         color: '#3388FF',
         weight: 1,
         opacity: 0.7,
+        fillOpacity: 0.2,
       },
-      confirmedFg: L.featureGroup(),
+      cases: [
+        {
+          name: 'confirmed',
+          color: '#3388FF',
+          fg: L.featureGroup(),
+        },
+        {
+          name: 'recovered',
+          color: 'green',
+          fg: L.featureGroup(),
+        },
+        {
+          name: 'deaths',
+          color: 'darkred',
+          fg: L.featureGroup(),
+        },
+      ],
       popupComponentInstance: null,
     };
   },
   mounted() {
     this.initMap();
-    this.updateConfirmed();
+    this.update();
   },
   watch: {
     confirmed() {
-      this.updateConfirmed();
+      this.update();
+    },
+    deaths() {
+      this.update();
+    },
+    recovered() {
+      this.update();
     },
     idx() {
-      this.updateConfirmed();
+      this.update();
     },
   },
   methods: {
@@ -100,40 +133,45 @@ export default {
       });
       this.basemaps.light.addTo(this.map);
       L.control.layers(this.basemaps).addTo(this.map);
-      this.confirmedFg.addTo(this.map);
-    },
-    updateConfirmed() {
-      this.confirmedFg.clearLayers();
-      this.confirmed.forEach((d) => {
-        const number = d.series[this.idx].value;
-        if (number > 0) {
-          const layer = L.circleMarker(d.latLng, this.circleDefaultStyle);
-          const radius = Math.sqrt(number) / 5;
-          layer.setRadius(radius);
-          layer.bindTooltip(`${number}`);
-          layer.bindPopup(`<h4>${d['Province/State']}
-            ${d['Country/Region']}</h4><p>Confirmed: ${number}</p>`);
-          layer.on({
-            mouseover: (e) => {
-              e.target.setStyle(this.circleHoveredStyle);
-            },
-            mouseout: (e) => {
-              e.target.setStyle(this.circleDefaultStyle);
-            },
-            popupopen: (e) => {
-              this.onPopupOpen(e, d);
-            },
-            popupclose: this.onPopupClose,
-          });
-          this.confirmedFg.addLayer(layer);
-        }
+      this.cases.forEach((c) => {
+        c.fg.addTo(this.map);
       });
     },
-    onPopupOpen(e, item) {
+    update() {
+      this.cases.forEach((c) => {
+        c.fg.clearLayers();
+        this[c.name].forEach((d) => {
+          const number = d.series[this.idx].value;
+          const circleDefaultStyle = { ...this.circleDefaultStyle, color: c.color };
+          if (number > 0) {
+            const layer = L.circleMarker(d.latLng, circleDefaultStyle);
+            const radius = Math.sqrt(number) / 5;
+            layer.setRadius(radius);
+            layer.bindTooltip(`<b>${d['Country/Region']} ${d['Province/State']}</b><br />
+              ${capitalizeFirstLetter(c.name)}: ${number}`);
+            layer.bindPopup();
+            layer.on({
+              mouseover: (e) => {
+                e.target.setStyle(this.circleHoveredStyle);
+              },
+              mouseout: (e) => {
+                e.target.setStyle(circleDefaultStyle);
+              },
+              popupopen: (e) => {
+                this.onPopupOpen(e, d, c.color);
+              },
+              popupclose: this.onPopupClose,
+            });
+            c.fg.addLayer(layer);
+          }
+        });
+      });
+    },
+    onPopupOpen(e, item, color) {
       const { popup } = e;
       const ComponentConstructor = Vue.extend(MapPopupComponent);
       this.popupComponentInstance = new ComponentConstructor({
-        propsData: { item },
+        propsData: { item, color },
         parent: this,
       }).$mount();
       popup.setContent(this.popupComponentInstance.$el);

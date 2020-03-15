@@ -3,7 +3,7 @@
     <h4>{{ item['Country/Region'] }} {{ item['Province/State'] }}</h4>
     <p>
       <b-form-checkbox v-model="isLogScale">Log scale</b-form-checkbox>
-      <ChartComponent :item="item" :is-log-scale="isLogScale" />
+      <ChartComponent :item="item" :is-log-scale="isLogScale" :color="color" />
     </p>
   </div>
 </template>
@@ -15,6 +15,10 @@ export default {
   props: {
     item: {
       type: Object,
+      required: true,
+    },
+    color: {
+      type: String,
       required: true,
     },
   },
