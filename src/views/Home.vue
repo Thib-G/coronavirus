@@ -1,5 +1,5 @@
 <template>
-  <b-container class="home d-flex flex-column h-100">
+  <b-container class="home">
     <b-row>
       <b-col>
         <h1>Coronavirus <small>Confirmed cases, deaths and recovered</small></h1>
@@ -16,10 +16,11 @@
         <p class="text-center" v-if="dates.length > 0">
           {{ formatISO(dates[index], { representation: 'date' }) }}
         </p>
+        <p class="text-center" v-else>Loading</p>
       </b-col>
     </b-row>
-    <b-row class="map mb-2 h-100">
-      <b-col cols="9">
+    <b-row>
+      <b-col class="map" md="9" sm="12">
         <MapComponent
           :confirmed="confirmed"
           :deaths="deaths"
@@ -27,7 +28,7 @@
           :idx="index"
         />
       </b-col>
-      <b-col class="h-100 flex-grow overflow-auto">
+      <b-col md="3" sm="12" class="tbl flex-grow overflow-auto">
         <b-form-select v-model="selected" :options="options" size="sm" class="mt-1 mb-1" />
         <DetailComponent
           :cases="this[selected]"
@@ -137,7 +138,7 @@ export default {
 </script>
 
 <style scoped>
-  .map {
-    min-height: 400px;
+  .map, .tbl {
+    height: 500px;
   }
 </style>
