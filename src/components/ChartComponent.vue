@@ -11,6 +11,16 @@
           {{ dateFormat(lastPoint.key, 'd/M')}}:
           {{ lastPoint.value }}</text>
       </g>
+      <g
+        :transform="`translate(${scale.x(selected.key)},${scale.y(selected.value)})`"
+        class="mouse-point"
+        v-if="selected"
+      >
+        <circle r="3" />
+        <text :x="-5" :y="2">
+          {{ dateFormat(lastPoint.key, 'd/M')}}:
+          {{ lastPoint.value }}</text>
+      </g>
     </g>
     <g
       :transform="`translate(${margin.left},${margin.top + height})`"
@@ -22,6 +32,13 @@
       ref="axisY"
       class="axis axis-y"
     />
+    <g
+      :transform="`translate(${margin.left},${margin.top})`"
+      class="overlay"
+      ref="overlay"
+    >
+      <rect ref="overlayRect" :x="0" :y="0" :width="width" :height="height" />
+    </g>
   </svg>
 </template>
 
@@ -29,6 +46,7 @@
 import dateFormat from 'date-fns/format';
 
 import d3 from '@/assets/d3';
+import { event as currentEvent } from 'd3-selection';
 
 export default {
   props: {
@@ -53,11 +71,13 @@ export default {
       margin: {
         top: 10, right: 10, bottom: 20, left: 50,
       },
+      selected: null,
     };
   },
   mounted() {
     this.updateAxis();
     this.updatePath();
+    this.initMouse();
   },
   watch: {
     scale() {
@@ -101,6 +121,9 @@ export default {
         .x((d) => this.scale.x(d.key))
         .y((d) => this.scale.y(d.value));
     },
+    seriesInverted() {
+      return [...this.series].sort((a, b) => b.key - a.key);
+    },
   },
   methods: {
     updatePath() {
@@ -124,6 +147,14 @@ export default {
             .ticks(5, '.0f'),
         );
     },
+    initMouse() {
+      d3.select(this.$refs.overlayRect)
+        .on('mousemove', () => {
+          const mouse = d3.mouse(currentEvent.target);
+          const item = this.seriesInverted.find((d) => this.scale.x(d.key) <= mouse[0]);
+          this.selected = item;
+        });
+    },
   },
 };
 </script>
@@ -133,13 +164,18 @@ export default {
     fill: none;
     stroke-width: 2px;
   }
-  .last-point > circle {
+  .last-point > circle, .mouse-point > circle {
     fill: rgb(255, 255, 255, 0.2);
     stroke: black;
     stroke-width: 1px;
   }
-  .last-point > text {
+  .last-point > text, .mouse-point > text {
     text-anchor: end;
     font-size: 9pt;
+  }
+  .overlay > rect {
+    pointer-events: all;
+    fill: none;
+    stroke-width: 0;
   }
 </style>

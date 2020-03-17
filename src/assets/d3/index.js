@@ -1,5 +1,7 @@
 import { csv } from 'd3-fetch';
-import { select, selectAll } from 'd3-selection';
+import {
+  select, selectAll, mouse, event,
+} from 'd3-selection';
 import { line } from 'd3-shape';
 import { scaleLinear, scaleLog } from 'd3-scale';
 import { axisBottom, axisLeft } from 'd3-axis';
@@ -12,6 +14,8 @@ export default {
   line,
   scaleLinear,
   scaleLog,
+  mouse,
+  event,
   axisBottom,
   axisLeft,
   transition,
