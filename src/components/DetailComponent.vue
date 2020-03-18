@@ -18,10 +18,16 @@ export default {
   },
   computed: {
     items() {
-      return this.cases.map((row) => ({
-        Location: `${row['Province/State']} ${row['Country/Region']}`,
-        Total: row.series[this.idx].value,
-      })).sort((a, b) => b.Total - a.Total);
+      return this.cases.map((row) => {
+        const evol = this.idx > 0
+          ? (row.series[this.idx].value - row.series[this.idx - 1].value)
+          : 0;
+        return {
+          Location: `${row['Province/State']} ${row['Country/Region']}`,
+          Total: row.series[this.idx].value,
+          Evol: evol > 0 ? `+${evol}` : `${evol}`,
+        };
+      }).sort((a, b) => b.Total - a.Total);
     },
   },
 };
