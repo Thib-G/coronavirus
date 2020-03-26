@@ -141,7 +141,7 @@ export default {
       this.cases.forEach((c) => {
         c.fg.clearLayers();
         this[c.name].forEach((d) => {
-          const number = d.series[this.idx].value;
+          const number = this.idx < d.series.length ? d.series[this.idx].value : 0;
           const circleDefaultStyle = { ...this.circleDefaultStyle, color: c.color };
           if (number > 0) {
             const layer = L.circleMarker(d.latLng, circleDefaultStyle);

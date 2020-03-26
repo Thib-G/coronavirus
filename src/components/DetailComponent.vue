@@ -20,7 +20,7 @@ export default {
     items() {
       return this.cases.map((row) => ({
         Location: `${row['Province/State']} ${row['Country/Region']}`,
-        Total: row.series[this.idx].value,
+        Total: this.idx < row.series.length ? row.series[this.idx].value : 0,
       })).sort((a, b) => b.Total - a.Total);
     },
   },
