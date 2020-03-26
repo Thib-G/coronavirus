@@ -40,7 +40,7 @@
       <b-col>
         <p class="small">
           Data:
-          <a href="https://github.com/CSSEGISandData/COVID-19/blob/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv" target="_blank">
+          <a href="https://github.com/CSSEGISandData/COVID-19/" target="_blank">
             2019 Novel Coronavirus COVID-19 (2019-nCoV) Data Repository by Johns Hopkins CSSE
           </a>
           <br />
