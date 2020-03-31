@@ -1,5 +1,5 @@
 <template>
-  <b-container class="home">
+  <b-container class="world">
     <b-row>
       <b-col>
         <h1>Coronavirus <small>Confirmed cases, deaths and recovered</small></h1>
@@ -21,7 +21,7 @@
     </b-row>
     <b-row>
       <b-col class="map" md="9" sm="12">
-        <MapComponent
+        <WorldMapComponent
           :confirmed="confirmed"
           :deaths="deaths"
           :recovered="recovered"
@@ -31,7 +31,7 @@
       </b-col>
       <b-col md="3" sm="12" class="tbl flex-grow overflow-auto">
         <b-form-select v-model="selected" :options="options" size="sm" class="mt-1 mb-1" />
-        <DetailComponent
+        <WorldDetailComponent
           :cases="this[selected]"
           :idx="index"
           @on-case-selected="setSelected"
@@ -57,8 +57,8 @@
 import formatISO from 'date-fns/formatISO';
 
 import AppService from '@/services/app-service';
-import MapComponent from '@/components/MapComponent.vue';
-import DetailComponent from '@/components/DetailComponent.vue';
+import WorldMapComponent from '@/components/WorldMapComponent.vue';
+import WorldDetailComponent from '@/components/WorldDetailComponent.vue';
 
 export default {
   name: 'Home',
@@ -137,8 +137,8 @@ export default {
     },
   },
   components: {
-    MapComponent,
-    DetailComponent,
+    WorldMapComponent,
+    WorldDetailComponent,
   },
 };
 </script>

@@ -7,7 +7,8 @@
 
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
-          <b-nav-item to="/world">World</b-nav-item>
+          <b-nav-item to="/world" active-class="active">World</b-nav-item>
+          <b-nav-item to="/belgium" active-class="active">Belgium</b-nav-item>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>

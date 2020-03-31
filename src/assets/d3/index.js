@@ -1,4 +1,4 @@
-import { csv } from 'd3-fetch';
+import { csv, json } from 'd3-fetch';
 import {
   select, selectAll, mouse, event,
 } from 'd3-selection';
@@ -9,6 +9,7 @@ import { transition } from 'd3-transition';
 
 export default {
   csv,
+  json,
   select,
   selectAll,
   line,

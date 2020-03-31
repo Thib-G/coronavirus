@@ -7,21 +7,10 @@
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import Vue from 'vue';
-import { mapBoxKey } from '@/assets/keys';
 
-import MapPopupComponent from '@/components/MapPopupComponent.vue';
+import basemaps from '@/assets/map/basemaps';
 
-// eslint-disable-next-line
-delete L.Icon.Default.prototype._getIconUrl;
-
-L.Icon.Default.mergeOptions({
-  // eslint-disable-next-line
-  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
-  // eslint-disable-next-line
-  iconUrl: require('leaflet/dist/images/marker-icon.png'),
-  // eslint-disable-next-line
-  shadowUrl: require('leaflet/dist/images/marker-shadow.png')
-});
+import WorldMapPopupComponent from '@/components/WorldMapPopupComponent.vue';
 
 const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
 
@@ -49,37 +38,11 @@ export default {
     },
   },
   data() {
-    const options = { tileSize: 512, maxZoom: 18, zoomOffset: -1 };
     return {
       zoom: 2,
-      center: [50.465841, 4.857634],
+      center: L.latLng([50.465841, 4.857634]),
       pH: 3,
-      basemaps: {
-        dark: L.tileLayer(
-          `https://api.mapbox.com/styles/v1/mapbox/dark-v10/tiles/{z}/{x}/{y}@2x?access_token=${mapBoxKey}`,
-          {
-            attribution: `&copy; <a href="https://www.mapbox.com/feedback/">Mapbox</a>
-                        &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>`,
-            ...options,
-          },
-        ),
-        light: L.tileLayer(
-          `https://api.mapbox.com/styles/v1/mapbox/light-v10/tiles/{z}/{x}/{y}@2x?access_token=${mapBoxKey}`,
-          {
-            attribution: `&copy; <a href="https://www.mapbox.com/feedback/">Mapbox</a>
-                        &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>`,
-            ...options,
-          },
-        ),
-        satellite: L.tileLayer(
-          `https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/tiles/{z}/{x}/{y}@2x?access_token=${mapBoxKey}`,
-          {
-            attribution: `&copy; <a href="https://www.mapbox.com/feedback/">Mapbox</a>
-                        &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>`,
-            ...options,
-          },
-        ),
-      },
+      basemaps: basemaps(),
       map: null,
       circleHoveredStyle: {
         opacity: 1.0,
@@ -140,8 +103,8 @@ export default {
         center: this.center,
         zoom: this.zoom,
       });
-      this.basemaps.light.addTo(this.map);
       L.control.layers(this.basemaps).addTo(this.map);
+      this.basemaps.light.addTo(this.map);
       this.cases.forEach((c) => {
         c.fg.addTo(this.map);
       });
@@ -178,7 +141,7 @@ export default {
     },
     onPopupOpen(e, item, color) {
       const { popup } = e;
-      const ComponentConstructor = Vue.extend(MapPopupComponent);
+      const ComponentConstructor = Vue.extend(WorldMapPopupComponent);
       this.popupComponentInstance = new ComponentConstructor({
         propsData: { item, color },
         parent: this,
