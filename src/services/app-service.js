@@ -5,7 +5,8 @@ const TIME_SERIES_CONFIRMED = 'https://raw.githubusercontent.com/CSSEGISandData/
 const TIME_SERIES_DEATHS = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv';
 const TIME_SERIES_RECOVERED = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv';
 
-const processData = (url) => d3.csv(url, (row) => ({
+const processData = (url) => d3.csv(url, (row, i) => ({
+  id: i,
   'Province/State': row['Province/State'],
   'Country/Region': row['Country/Region'],
   latLng: [+row.Lat, +row.Long],

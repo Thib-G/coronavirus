@@ -43,6 +43,10 @@ export default {
       type: Number,
       required: true,
     },
+    selectedCase: {
+      type: Object,
+      required: false,
+    },
   },
   data() {
     const options = { tileSize: 512, maxZoom: 18, zoomOffset: -1 };
@@ -123,6 +127,11 @@ export default {
     },
     idx() {
       this.update();
+    },
+    selectedCase(newVal) {
+      if (newVal) {
+        this.map.flyTo(newVal.latLng, 5);
+      }
     },
   },
   methods: {

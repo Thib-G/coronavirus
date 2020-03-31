@@ -1,6 +1,10 @@
 <template>
   <div class="h-100">
-    <b-table small :items="items" class="small" />
+    <b-table small :items="items" class="small">
+      <template v-slot:cell(Location)="data">
+        <a href @click.prevent="select(data.item)">{{ data.value }}</a>
+      </template>
+    </b-table>
   </div>
 </template>
 
@@ -28,6 +32,12 @@ export default {
           Evol: evol > 0 ? `+${evol}` : `${evol}`,
         };
       }).sort((a, b) => b.Total - a.Total);
+    },
+  },
+  methods: {
+    select(item) {
+      const selectedCase = this.cases.find((d) => `${d['Province/State']} ${d['Country/Region']}` === item.Location);
+      this.$emit('on-case-selected', selectedCase);
     },
   },
 };

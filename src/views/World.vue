@@ -26,6 +26,7 @@
           :deaths="deaths"
           :recovered="recovered"
           :idx="index"
+          :selected-case="selectedCase"
         />
       </b-col>
       <b-col md="3" sm="12" class="tbl flex-grow overflow-auto">
@@ -33,6 +34,7 @@
         <DetailComponent
           :cases="this[selected]"
           :idx="index"
+          @on-case-selected="setSelected"
         />
       </b-col>
     </b-row>
@@ -72,6 +74,7 @@ export default {
       playing: null,
       options: ['confirmed', 'recovered', 'deaths'],
       selected: 'confirmed',
+      selectedCase: null,
     };
   },
   created() {
@@ -128,6 +131,9 @@ export default {
     stop() {
       clearInterval(this.playing);
       this.isPlaying = false;
+    },
+    setSelected(item) {
+      this.selectedCase = item;
     },
   },
   components: {
