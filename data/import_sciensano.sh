@@ -1,3 +1,6 @@
+mydir=$(dirname "$0")
+echo $mydir
+cd $mydir
 git pull
 wget -N https://epistat.sciensano.be/Data/COVID19BE_CASES_MUNI.json
 git add COVID19BE_CASES_MUNI.json
