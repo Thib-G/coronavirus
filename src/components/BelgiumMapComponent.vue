@@ -1,5 +1,14 @@
 <template>
-  <div ref="map" class="map">
+  <div class="h-100">
+    <div ref="map" class="map h-100" />
+    <div class="overlay text-center">
+      <div class="small">Incidence (cases/100k inhab.)</div>
+      <BelgiumMapLegendComponent
+        :height="35"
+        :width="220"
+        :scale="scaleColor"
+      />
+    </div>
   </div>
 </template>
 
@@ -8,6 +17,8 @@ import L from 'leaflet';
 
 import d3 from '@/assets/d3';
 import basemaps from '@/assets/map/basemaps';
+
+import BelgiumMapLegendComponent from '@/components/BelgiumMapLegendComponent.vue';
 
 export default {
   props: {
@@ -44,7 +55,7 @@ export default {
   },
   methods: {
     initMap() {
-      this.map = L.map(this.$el, {
+      this.map = L.map(this.$refs.map, {
         center: this.center,
         zoom: this.zoom,
       });
@@ -66,6 +77,15 @@ export default {
               ${inc.cases} cases<br />
               Population: ${inc.pop}<br />
               Incidence: ${inc.cases === '<5' ? '<' : ''}${inc.incidence.toFixed(1)} cases/100k inhab.`);
+            layer.on({
+              mouseover: () => {
+                layer.bringToFront();
+                layer.setStyle({ color: 'black' });
+              },
+              mouseout: () => {
+                layer.setStyle({ color: 'grey' });
+              },
+            });
           },
         });
         this.communesFg.addLayer(layers);
@@ -85,12 +105,23 @@ export default {
       };
     },
   },
+  components: {
+    BelgiumMapLegendComponent,
+  },
 };
 </script>
 
 <style scoped>
-  .map {
-    height: 100%;
-    width: 100%;
+  .overlay {
+    height: 75px;
+    width: 240px;
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    z-index: 999;
+    background-color: rgb(255, 255, 255);
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    padding: 5px;
   }
 </style>
