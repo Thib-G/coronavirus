@@ -5,7 +5,7 @@ const TIME_SERIES_CONFIRMED = 'https://raw.githubusercontent.com/CSSEGISandData/
 const TIME_SERIES_DEATHS = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv';
 const TIME_SERIES_RECOVERED = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv';
 
-const COMMUNES = 'https://raw.githubusercontent.com/Thib-G/coronavirus/master/data/communes.geojson';
+const COMMUNES = 'https://raw.githubusercontent.com/Thib-G/coronavirus/master/data/communes_ign_20m.geojson';
 const COVID19BE_CASES_MUNI_CUM = 'https://raw.githubusercontent.com/Thib-G/coronavirus/master/data/COVID19BE_CASES_MUNI_CUM.utf8.json';
 const POPULATION_2019 = 'https://raw.githubusercontent.com/Thib-G/coronavirus/master/data/population2019.csv';
 
@@ -59,9 +59,9 @@ export default {
                 feature.properties,
                 {
                   cases: casesData
-                    .find((c) => c.NIS5 === `${feature.properties.NSI}`),
+                    .find((c) => c.NIS5 === feature.properties.NISCode),
                   population: population
-                    .find((p) => p.CD_REFNIS === `${feature.properties.NSI}`),
+                    .find((p) => p.CD_REFNIS === feature.properties.NISCode),
                 },
               ),
             },

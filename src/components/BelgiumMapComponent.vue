@@ -72,9 +72,10 @@ export default {
       });
     },
     getIncidence(feature) {
-      const name = feature.properties.Name;
-      const cases = feature.properties.cases ? feature.properties.cases.CASES : '?';
-      const pop = feature.properties.population ? feature.properties.population.POP : 0;
+      const p = feature.properties;
+      const name = `${p.NameDut || ''} ${p.NameFre || ''} ${p.NameGer || ''}`;
+      const cases = p.cases ? p.cases.CASES : '?';
+      const pop = p.population ? p.population.POP : 0;
       const incidence = (pop > 0 && cases !== '?') ? ((cases === '<5' ? 5 : +cases) / pop) * 1e5 : 0;
       return {
         name,
