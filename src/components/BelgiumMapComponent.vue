@@ -5,6 +5,8 @@
 
 <script>
 import L from 'leaflet';
+
+import d3 from '@/assets/d3';
 import basemaps from '@/assets/map/basemaps';
 
 export default {
@@ -31,6 +33,15 @@ export default {
       this.updateCommunes();
     },
   },
+  computed: {
+    scaleColor() {
+      const incidences = this.communes.features.map((f) => this.getIncidence(f).incidence);
+      const min = Math.min(...incidences);
+      const max = Math.max(...incidences);
+      return d3.scaleSequential(d3.interpolateGreens)
+        .domain([min, max]);
+    },
+  },
   methods: {
     initMap() {
       this.map = L.map(this.$el, {
@@ -45,20 +56,32 @@ export default {
       this.$nextTick().then(() => {
         this.communesFg.clearLayers();
         const layers = L.geoJson(this.communes, {
-          style: () => ({ weight: 2 }),
+          style: () => ({
+            weight: 2, color: 'grey', opacity: 0.8, fillOpacity: 0.6,
+          }),
           onEachFeature: (feature, layer) => {
-            const name = feature.properties.Name;
-            const cases = feature.properties.cases ? feature.properties.cases.CASES : '?';
-            const pop = feature.properties.population ? feature.properties.population.POP : 0;
-            const incidence = (pop > 0 && cases !== '?') ? ((cases === '<5' ? 5 : cases) / pop) * 1e5 : 0;
-            layer.bindTooltip(`<b>${name}:</b>
-              ${cases} cases<br />
-              Population: ${pop}<br />
-              Incidence: ${cases === '<5' ? '<' : ''}${incidence.toFixed(1)} cases/100k inhab.`);
+            const inc = this.getIncidence(feature);
+            layer.setStyle({ fillColor: this.scaleColor(inc.incidence) });
+            layer.bindTooltip(`<b>${inc.name}:</b>
+              ${inc.cases} cases<br />
+              Population: ${inc.pop}<br />
+              Incidence: ${inc.cases === '<5' ? '<' : ''}${inc.incidence.toFixed(1)} cases/100k inhab.`);
           },
         });
         this.communesFg.addLayer(layers);
       });
+    },
+    getIncidence(feature) {
+      const name = feature.properties.Name;
+      const cases = feature.properties.cases ? feature.properties.cases.CASES : '?';
+      const pop = feature.properties.population ? feature.properties.population.POP : 0;
+      const incidence = (pop > 0 && cases !== '?') ? ((cases === '<5' ? 5 : +cases) / pop) * 1e5 : 0;
+      return {
+        name,
+        cases,
+        pop,
+        incidence,
+      };
     },
   },
 };
