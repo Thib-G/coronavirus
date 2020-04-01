@@ -47,8 +47,14 @@ export default {
         const layers = L.geoJson(this.communes, {
           style: () => ({ weight: 2 }),
           onEachFeature: (feature, layer) => {
-            layer.bindTooltip(`${feature.properties.Name}:
-              ${feature.properties.cases ? feature.properties.cases.CASES : '?'}`);
+            const name = feature.properties.Name;
+            const cases = feature.properties.cases ? feature.properties.cases.CASES : '?';
+            const pop = feature.properties.population ? feature.properties.population.POP : 0;
+            const incidence = (pop > 0 && cases !== '?') ? ((cases === '<5' ? 5 : cases) / pop) * 1e5 : 0;
+            layer.bindTooltip(`<b>${name}:</b>
+              ${cases} cases<br />
+              Population: ${pop}<br />
+              Incidence: ${cases === '<5' ? '<' : ''}${incidence.toFixed(1)} cases/100k inhab.`);
           },
         });
         this.communesFg.addLayer(layers);

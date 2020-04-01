@@ -7,6 +7,7 @@ const TIME_SERIES_RECOVERED = 'https://raw.githubusercontent.com/CSSEGISandData/
 
 const COMMUNES = 'https://raw.githubusercontent.com/Thib-G/coronavirus/master/data/communes.geojson';
 const COVID19BE_CASES_MUNI_CUM = 'https://raw.githubusercontent.com/Thib-G/coronavirus/master/data/COVID19BE_CASES_MUNI_CUM.utf8.json';
+const POPULATION_2019 = 'https://raw.githubusercontent.com/Thib-G/coronavirus/master/data/population2019.csv';
 
 const processData = (url) => d3.csv(url, (row, i) => ({
   id: i,
@@ -37,8 +38,18 @@ export default {
     return processData(TIME_SERIES_RECOVERED);
   },
   getBelgiumCommunes() {
-    return Promise.all([d3.json(COMMUNES), d3.json(COVID19BE_CASES_MUNI_CUM)])
-      .then(([geojson, casesData]) => Object.assign(
+    return Promise.all([
+      d3.json(COMMUNES),
+      d3.json(COVID19BE_CASES_MUNI_CUM),
+      d3.csv(POPULATION_2019, (row) => Object.assign(
+        row,
+        {
+          POP: parseInt(row.POP, 10),
+          AREA: parseFloat(row.AREA),
+        },
+      )),
+    ])
+      .then(([geojson, casesData, population]) => Object.assign(
         geojson,
         {
           features: geojson.features.map((feature) => Object.assign(
@@ -47,7 +58,10 @@ export default {
               properties: Object.assign(
                 feature.properties,
                 {
-                  cases: casesData.find((c) => parseInt(c.NIS5, 10) === feature.properties.NSI),
+                  cases: casesData
+                    .find((c) => c.NIS5 === `${feature.properties.NSI}`),
+                  population: population
+                    .find((p) => p.CD_REFNIS === `${feature.properties.NSI}`),
                 },
               ),
             },
