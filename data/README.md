@@ -3,4 +3,4 @@
 Data copied from https://epistat.wiv-isp.be/covid/ 
 
 Checks every hour (at HH:15) if a new version of the files is available.
-Json file are also converted from windows-1252 to UTF-8 and pushed to this repo.
+Json file are converted from windows-1252 to UTF-8 and pushed to this repo.
