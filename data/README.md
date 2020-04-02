@@ -1,4 +1,4 @@
-# Sciensano data for Covid-18
+# Sciensano data for Covid-19
 
 Data copied from https://epistat.wiv-isp.be/covid/ 
 
