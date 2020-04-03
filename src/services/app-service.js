@@ -1,5 +1,6 @@
 import d3 from '@/assets/d3';
 import parse from 'date-fns/parse';
+import parseISO from 'date-fns/parseISO';
 
 const TIME_SERIES_CONFIRMED = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv';
 const TIME_SERIES_DEATHS = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv';
@@ -7,6 +8,7 @@ const TIME_SERIES_RECOVERED = 'https://raw.githubusercontent.com/CSSEGISandData/
 
 const COMMUNES = 'https://raw.githubusercontent.com/Thib-G/coronavirus/master/data/communes_ign_20m.geojson';
 const COVID19BE_CASES_MUNI_CUM = 'https://raw.githubusercontent.com/Thib-G/coronavirus/master/data/COVID19BE_CASES_MUNI_CUM.utf8.json';
+const COVID19BE_CASES_MUNI_CUM_LAST_UPDATE = 'https://raw.githubusercontent.com/Thib-G/coronavirus/master/data/COVID19BE_CASES_MUNI_CUM.utf8.last_update.txt';
 const POPULATION_2019 = 'https://raw.githubusercontent.com/Thib-G/coronavirus/master/data/population2019.csv';
 
 const processData = (url) => d3.csv(url, (row, i) => ({
@@ -68,5 +70,11 @@ export default {
           )),
         },
       ));
+  },
+  getBelgiumCommunesLastUpdate() {
+    return d3.text(COVID19BE_CASES_MUNI_CUM_LAST_UPDATE).then((txt) => {
+      const dateStr = txt.replace('    autoupdate at ', '').replace(/^\s+|\s+$/g, '');
+      return parseISO(dateStr);
+    });
   },
 };

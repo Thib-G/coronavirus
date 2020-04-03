@@ -1,4 +1,4 @@
-import { csv, json } from 'd3-fetch';
+import { csv, json, text } from 'd3-fetch';
 import {
   select, selectAll, mouse, event,
 } from 'd3-selection';
@@ -11,6 +11,7 @@ import { interpolateGreens } from 'd3-scale-chromatic';
 export default {
   csv,
   json,
+  text,
   select,
   selectAll,
   line,

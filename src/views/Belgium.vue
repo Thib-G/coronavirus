@@ -1,6 +1,6 @@
 <template>
   <div class="h-100 v-100">
-    <BelgiumMapComponent :communes="communes" />
+    <BelgiumMapComponent :communes="communes" :last-update="lastUpdate" />
   </div>
 </template>
 
@@ -17,15 +17,22 @@ export default {
         type: 'FeatureCollection',
         features: [],
       },
+      lastUpdate: new Date(1970, 0, 1),
     };
   },
   created() {
     this.getCommunes();
+    this.getLastUpdate();
   },
   methods: {
     getCommunes() {
       this.appService.getBelgiumCommunes().then((data) => {
         this.communes = data;
+      });
+    },
+    getLastUpdate() {
+      this.appService.getBelgiumCommunesLastUpdate().then((data) => {
+        this.lastUpdate = data;
       });
     },
   },

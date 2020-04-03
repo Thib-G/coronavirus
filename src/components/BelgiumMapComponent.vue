@@ -8,12 +8,16 @@
         :width="220"
         :scale="scaleColor"
       />
+      <div class="small text-muted">
+        <small>Last update: {{ dateFormatISO9075(lastUpdate) }}</small>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import L from 'leaflet';
+import dateFormatISO9075 from 'date-fns/formatISO9075';
 
 import d3 from '@/assets/d3';
 import basemaps from '@/assets/map/basemaps';
@@ -26,9 +30,14 @@ export default {
       type: Object,
       required: true,
     },
+    lastUpdate: {
+      type: Date,
+      required: true,
+    },
   },
   data() {
     return {
+      dateFormatISO9075,
       zoom: 8,
       center: L.latLng([50.465841, 4.857634]),
       basemaps: basemaps('&copy; <a href="https://epistat.wiv-isp.be/covid/">https://epistat.wiv-isp.be/covid/</a> | '),
@@ -113,7 +122,7 @@ export default {
 
 <style scoped>
   .overlay {
-    height: 80px;
+    height: 85px;
     width: 240px;
     position: absolute;
     left: 10px;
