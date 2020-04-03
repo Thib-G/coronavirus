@@ -29,7 +29,7 @@ git add COVID19BE_tests.utf8.json
 git commit -m "autoupdate at $(date --iso-8601=minute)"
 git push
 git pull
-git log -1 --follow COVID19BE_CASES_MUNI.utf8.json | tail -1 > COVID19BE_CASES_MUNI.utf8.last_update.txt
-git add COVID19BE_CASES_MUNI.utf8.last_update.txt
+git log -1 --follow COVID19BE_CASES_MUNI_CUM.utf8.json | tail -1 > COVID19BE_CASES_MUNI_CUM.utf8.last_update.txt
+git add COVID19BE_CASES_MUNI_CUM.utf8.last_update.txt
 git commit -m "update last_update"
 git push
