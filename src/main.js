@@ -3,7 +3,15 @@ import 'bootstrap-vue/dist/bootstrap-vue.css';
 import 'leaflet/dist/leaflet.css';
 
 import Vue from 'vue';
-import { BootstrapVue } from 'bootstrap-vue';
+import {
+  LayoutPlugin,
+  TablePlugin,
+  NavbarPlugin,
+  ButtonPlugin,
+  FormInputPlugin,
+  FormSelectPlugin,
+  FormCheckboxPlugin,
+} from 'bootstrap-vue';
 
 import L from 'leaflet';
 
@@ -26,7 +34,13 @@ L.Icon.Default.mergeOptions({
 
 Vue.config.productionTip = false;
 
-Vue.use(BootstrapVue);
+Vue.use(LayoutPlugin);
+Vue.use(TablePlugin);
+Vue.use(NavbarPlugin);
+Vue.use(ButtonPlugin);
+Vue.use(FormInputPlugin);
+Vue.use(FormSelectPlugin);
+Vue.use(FormCheckboxPlugin);
 
 new Vue({
   router,
