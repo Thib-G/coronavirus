@@ -116,7 +116,7 @@ export default {
           const circleDefaultStyle = { ...this.circleDefaultStyle, color: c.color };
           if (number > 0) {
             const layer = L.circleMarker(d.latLng, circleDefaultStyle);
-            const radius = Math.sqrt(number) / 5;
+            const radius = Math.sqrt(number) / 10;
             layer.setRadius(radius);
             layer.bindTooltip(`<b>${d['Country/Region']} ${d['Province/State']}</b><br />
               ${capitalizeFirstLetter(c.name)}: ${number}`);
