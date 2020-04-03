@@ -9,7 +9,9 @@
         :scale="scaleColor"
       />
       <div class="small text-muted">
-        <small>Last update: {{ dateFormatISO9075(lastUpdate) }}</small>
+        <small>Last update:
+          <a href="https://github.com/Thib-G/coronavirus/tree/master/data">{{ dateFormatISO9075(lastUpdate) }}</a>
+        </small>
       </div>
     </div>
   </div>
