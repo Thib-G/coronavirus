@@ -4,7 +4,7 @@
     <div class="overlay text-center">
       <div class="small">Incidence (cases/100k inhab.)</div>
       <BelgiumMapLegendComponent
-        :height="35"
+        :height="40"
         :width="220"
         :scale="scaleColor"
       />
@@ -113,7 +113,7 @@ export default {
 
 <style scoped>
   .overlay {
-    height: 75px;
+    height: 80px;
     width: 240px;
     position: absolute;
     left: 10px;
