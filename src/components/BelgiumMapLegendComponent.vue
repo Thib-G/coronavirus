@@ -88,7 +88,7 @@ export default {
       d3.select(this.$refs.xAxis)
         .call(
           d3.axisBottom(this.axisScale)
-            .ticks(this.insideWidth / 40)
+            .ticks(this.insideWidth / 50)
             .tickSize(-this.insideHeight),
         );
     },
