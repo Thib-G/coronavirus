@@ -57,7 +57,9 @@ export default {
   },
   computed: {
     scaleColor() {
-      const incidences = this.communes.features.map((f) => this.getIncidence(f).incidence);
+      const incidences = this.communes.features
+        .filter((f) => f.properties.NameDut !== 'Herstappe')
+        .map((f) => this.getIncidence(f).incidence);
       const min = Math.min(...incidences);
       const max = Math.max(...incidences);
       return d3.scaleSequential(d3.interpolateGreens)
