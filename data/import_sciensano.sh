@@ -2,12 +2,12 @@ mydir=$(dirname "$0")
 echo $mydir
 cd $mydir
 git pull
-wget -N https://epistat.sciensano.be/Data/COVID19BE_CASES_MUNI.json -O COVID19BE_CASES_MUNI.json
-wget -N https://epistat.sciensano.be/Data/COVID19BE_CASES_AGESEX.json -O COVID19BE_CASES_AGESEX.json
-wget -N https://epistat.sciensano.be/Data/COVID19BE_CASES_MUNI_CUM.json -O COVID19BE_CASES_MUNI_CUM.json
-wget -N https://epistat.sciensano.be/Data/COVID19BE_HOSP.json -O COVID19BE_HOSP.json
-wget -N https://epistat.sciensano.be/Data/COVID19BE_MORT.json -O COVID19BE_MORT.json
-wget -N https://epistat.sciensano.be/Data/COVID19BE_tests.json -O COVID19BE_tests.json
+wget -nv -N https://epistat.sciensano.be/Data/COVID19BE_CASES_MUNI.json -O COVID19BE_CASES_MUNI.json
+wget -nv -N https://epistat.sciensano.be/Data/COVID19BE_CASES_AGESEX.json -O COVID19BE_CASES_AGESEX.json
+wget -nv -N https://epistat.sciensano.be/Data/COVID19BE_CASES_MUNI_CUM.json -O COVID19BE_CASES_MUNI_CUM.json
+wget -nv -N https://epistat.sciensano.be/Data/COVID19BE_HOSP.json -O COVID19BE_HOSP.json
+wget -nv -N https://epistat.sciensano.be/Data/COVID19BE_MORT.json -O COVID19BE_MORT.json
+wget -nv -N https://epistat.sciensano.be/Data/COVID19BE_tests.json -O COVID19BE_tests.json
 iconv -f "windows-1252" -t UTF-8 COVID19BE_CASES_MUNI.json -o COVID19BE_CASES_MUNI.utf8.json
 iconv -f "windows-1252" -t UTF-8 COVID19BE_CASES_AGESEX.json -o COVID19BE_CASES_AGESEX.utf8.json
 iconv -f "windows-1252" -t UTF-8 COVID19BE_CASES_MUNI_CUM.json -o COVID19BE_CASES_MUNI_CUM.utf8.json
