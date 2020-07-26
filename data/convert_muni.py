@@ -14,7 +14,6 @@ def sum_last_days(dataframe, days=14):
     end = dataframe.index.max()
     start = end - timedelta(days=(days-1))
     df_sliced = dataframe.loc[start.isoformat():end.isoformat()]
-    print(df_sliced)
     df_grouped = df_sliced.groupby(cols, as_index=False).sum()
     return df_grouped
 
