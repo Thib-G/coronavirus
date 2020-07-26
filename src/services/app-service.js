@@ -8,6 +8,8 @@ const TIME_SERIES_RECOVERED = 'https://raw.githubusercontent.com/CSSEGISandData/
 
 const COMMUNES = 'https://raw.githubusercontent.com/Thib-G/coronavirus/master/data/communes_ign_20m.geojson';
 const COVID19BE_CASES_MUNI_CUM = 'https://raw.githubusercontent.com/Thib-G/coronavirus/master/data/COVID19BE_CASES_MUNI_CUM.utf8.json';
+const COVID19BE_CASES_MUNI_7DAYS = 'https://raw.githubusercontent.com/Thib-G/coronavirus/master/data/COVID19BE_CASES_MUNI_7DAYS.json';
+const COVID19BE_CASES_MUNI_14DAYS = 'https://raw.githubusercontent.com/Thib-G/coronavirus/master/data/COVID19BE_CASES_MUNI_14DAYS.json';
 const COVID19BE_CASES_MUNI_CUM_LAST_UPDATE = 'https://raw.githubusercontent.com/Thib-G/coronavirus/master/data/COVID19BE_CASES_MUNI_CUM.utf8.last_update.txt';
 const POPULATION_2019 = 'https://raw.githubusercontent.com/Thib-G/coronavirus/master/data/population2019.csv';
 
@@ -39,10 +41,17 @@ export default {
   getTimeSeriesRecovered() {
     return processData(TIME_SERIES_RECOVERED);
   },
-  getBelgiumCommunes() {
+  getBelgiumCommunes(days = -1) {
+    let muni = COVID19BE_CASES_MUNI_CUM;
+    if (days === 7) {
+      muni = COVID19BE_CASES_MUNI_7DAYS;
+    }
+    if (days === 14) {
+      muni = COVID19BE_CASES_MUNI_14DAYS;
+    }
     return Promise.all([
       d3.json(COMMUNES),
-      d3.json(COVID19BE_CASES_MUNI_CUM),
+      d3.json(muni),
       d3.csv(POPULATION_2019, (row) => Object.assign(
         row,
         {

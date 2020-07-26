@@ -2,6 +2,9 @@
   <div class="h-100">
     <div ref="map" class="map h-100" />
     <div class="overlay text-center">
+      <div class="small">
+        <b-form-select v-model="selectedOption" :options="options" size="sm" class="mt-3" />
+      </div>
       <div class="small">Incidence (cases/100k inhab.)</div>
       <BelgiumMapLegendComponent
         :height="40"
@@ -36,6 +39,14 @@ export default {
       type: Date,
       required: true,
     },
+    options: {
+      type: Array,
+      required: true,
+    },
+    value: {
+      type: Number,
+      required: true,
+    },
   },
   data() {
     return {
@@ -56,6 +67,14 @@ export default {
     },
   },
   computed: {
+    selectedOption: {
+      get() {
+        return this.value;
+      },
+      set(newVal) {
+        this.$emit('input', newVal);
+      },
+    },
     scaleColor() {
       const incidences = this.communes.features
         .filter((f) => f.properties.NameDut !== 'Herstappe')
@@ -126,7 +145,7 @@ export default {
 
 <style scoped>
   .overlay {
-    height: 85px;
+    height: 140px;
     width: 240px;
     position: absolute;
     left: 10px;
