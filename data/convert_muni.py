@@ -11,9 +11,11 @@ df['CASES'] = pd.to_numeric(df['CASES'], errors='coerce')
 def sum_last_days(dataframe, days=14):
     cols = dataframe.columns.to_list()
     cols.remove('CASES')
-    today = date.today()
-    start = today - timedelta(days=days)
-    df_grouped = dataframe.loc[start.isoformat():today.isoformat()].groupby(cols, as_index=False).sum()
+    end = dataframe.index.max()
+    start = end - timedelta(days=(days-1))
+    df_sliced = dataframe.loc[start.isoformat():end.isoformat()]
+    print(df_sliced)
+    df_grouped = df_sliced.groupby(cols, as_index=False).sum()
     return df_grouped
 
 sum_last_days(df, days=7).to_json('COVID19BE_CASES_MUNI_7DAYS.json', orient='records')
