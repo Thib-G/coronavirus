@@ -14,9 +14,7 @@ iconv -f "windows-1252" -t UTF-8 COVID19BE_CASES_MUNI_CUM.json -o COVID19BE_CASE
 iconv -f "windows-1252" -t UTF-8 COVID19BE_HOSP.json -o COVID19BE_HOSP.utf8.json
 iconv -f "windows-1252" -t UTF-8 COVID19BE_MORT.json -o COVID19BE_MORT.utf8.json
 iconv -f "windows-1252" -t UTF-8 COVID19BE_tests.json -o COVID19BE_tests.utf8.json
-source .venv/bin/activate
-python convert_muni.py
-deactivate
+$mydir/.venv/bin/python convert_muni.py
 git add COVID19BE_CASES_MUNI.json
 git add COVID19BE_CASES_AGESEX.json
 git add COVID19BE_CASES_MUNI_CUM.json
