@@ -11,7 +11,7 @@ import {
   FormInputPlugin,
   FormSelectPlugin,
   FormCheckboxPlugin,
-} from 'bootstrap-vue';
+} from 'bootstrap-vue/src';
 
 import L from 'leaflet';
 
